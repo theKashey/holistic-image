@@ -63,7 +63,7 @@
     "image optimization",
     "wepback"
   ],
-  "repository": "",
+  "repository": "https://github.com/theKashey/holistic-image",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
