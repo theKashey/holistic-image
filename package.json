@@ -36,12 +36,25 @@
     "glob": "^7.1.7",
     "tslib": "^2.0.0"
   },
+  "peerDependencies": {
+    "@types/react": "^16.9.0 || ^17.0.0",
+    "react": "^16.9.0 || ^17.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
   "files": [
     "dist",
     "holistical-image.d.ts",
     "webpack",
     "cli",
-    "api"
+    "api",
+    "react"
   ],
   "keywords": [
     "image",

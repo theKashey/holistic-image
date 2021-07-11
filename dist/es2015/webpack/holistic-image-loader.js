@@ -1,6 +1,6 @@
 import { dirname, basename, relative } from 'path';
 import glob from 'glob';
-import { formats, sizes } from '../constants';
+import { formats, HOLISTIC_SIGNATURE, sizes } from '../constants';
 var findExt = function (source) {
   var match = Object
     ///
@@ -28,6 +28,7 @@ function holisticImageLoader() {
   var baseSource = this.resource;
   var basePath = dirname(baseSource);
   var source = baseSource.substr(0, baseSource.indexOf('@'));
+  var exactSourceName = basename(baseSource.substr(0, baseSource.indexOf(HOLISTIC_SIGNATURE)));
   var sourceName = basename(source);
   var imports = [];
   var exports = {};
@@ -55,7 +56,7 @@ function holisticImageLoader() {
       })
       .join('\n') +
     ";\n\t\n\timport metaInformation from './" +
-    sourceName +
+    exactSourceName +
     ".meta.js';\n\timport {IMAGE_META_DATA} from 'holistic-image'; \n  \n  const imageDef = " +
     JSON.stringify(exports, null, 2).replace(/"/g, '') +
     ';\n  imageDef[IMAGE_META_DATA] = metaInformation; \n  export default imageDef;\n  ';

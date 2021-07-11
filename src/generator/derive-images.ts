@@ -1,4 +1,6 @@
 // @ts-ignore
+import { join, basename, dirname } from 'path';
+
 import { ImagePool } from '@squoosh/lib';
 import glob from 'glob';
 
@@ -9,9 +11,12 @@ const is2X = (file: string) => file.includes('2x');
 
 const getTargets = (baseSource: string, extensions: string[]): string[] => {
   const source = baseSource.substr(0, baseSource.indexOf(HOLISTIC_SIGNATURE));
-  const sizeSource = [is2X(source) && source.replace('2x', '1x'), source];
+  const sizeSource: string[] = [is2X(source) && (source.replace('2x', '1x') as any), source];
 
-  return [...sizeSource.flatMap((file) => extensions.map((ext) => `${file}.${ext}`)), `${source}.meta.js`];
+  return [
+    ...sizeSource.flatMap((file) => extensions.map((ext) => join(dirname(file), `derived.${basename(file)}.${ext}`))),
+    `${source}.meta.js`,
+  ];
 };
 
 const compress = async (targets: string[], source: any, converters: Record<string, TargetFormat>) => {
@@ -63,10 +68,9 @@ export const deriveHolisticImages = async (folder: string, mask: string, convert
         if (metaFileIndex >= 0) {
           const metaFile = missingTargets.splice(metaFileIndex, 1)[0];
 
-          metaResult[metaFile] = {
-            width: imageInfo.bitmap.width,
-            height: imageInfo.bitmap.height,
-          };
+          metaResult[
+            metaFile
+          ] = `export default { width: ${imageInfo.bitmap.width}, height: ${imageInfo.bitmap.height} }`;
         }
 
         if (is2X(source)) {

@@ -2,8 +2,9 @@ import { __assign, __awaiter, __generator, __spreadArray } from 'tslib';
 // @ts-ignore
 import { ImagePool } from '@squoosh/lib';
 import glob from 'glob';
-import { derivedFiles } from '../utils/derived-files';
+import { join, basename, dirname } from 'path';
 import { defaultConverters, HOLISTIC_SIGNATURE } from '../constants';
+import { derivedFiles } from '../utils/derived-files';
 var is2X = function (file) {
   return file.includes('2x');
 };
@@ -15,7 +16,7 @@ var getTargets = function (baseSource, extensions) {
       [],
       sizeSource.flatMap(function (file) {
         return extensions.map(function (ext) {
-          return file + '.' + ext;
+          return join(dirname(file), 'derived.' + basename(file) + '.' + ext);
         });
       })
     ),
@@ -94,10 +95,12 @@ export var deriveHolisticImages = function (folder, mask, converters) {
                           metaResult = {};
                           if (metaFileIndex >= 0) {
                             metaFile = missingTargets.splice(metaFileIndex, 1)[0];
-                            metaResult[metaFile] = {
-                              width: imageInfo.bitmap.width,
-                              height: imageInfo.bitmap.height,
-                            };
+                            metaResult[metaFile] =
+                              'export default { width: ' +
+                              imageInfo.bitmap.width +
+                              ', height: ' +
+                              imageInfo.bitmap.height +
+                              ' }';
                           }
                           if (!is2X(source)) return [3 /*break*/, 5];
                           return [

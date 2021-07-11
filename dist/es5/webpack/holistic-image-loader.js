@@ -31,6 +31,7 @@ function holisticImageLoader() {
   var baseSource = this.resource;
   var basePath = path_1.dirname(baseSource);
   var source = baseSource.substr(0, baseSource.indexOf('@'));
+  var exactSourceName = path_1.basename(baseSource.substr(0, baseSource.indexOf(constants_1.HOLISTIC_SIGNATURE)));
   var sourceName = path_1.basename(source);
   var imports = [];
   var exports = {};
@@ -58,7 +59,7 @@ function holisticImageLoader() {
       })
       .join('\n') +
     ";\n\t\n\timport metaInformation from './" +
-    sourceName +
+    exactSourceName +
     ".meta.js';\n\timport {IMAGE_META_DATA} from 'holistic-image'; \n  \n  const imageDef = " +
     JSON.stringify(exports, null, 2).replace(/"/g, '') +
     ';\n  imageDef[IMAGE_META_DATA] = metaInformation; \n  export default imageDef;\n  ';
