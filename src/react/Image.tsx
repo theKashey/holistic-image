@@ -8,10 +8,32 @@ import { toArray, toDPISrcSet } from './utils';
 type ImageType = {
   className?: string;
   alt: string;
+  /**
+   * sets image to be eager, lazy if false
+   */
   priorityImage?: boolean;
+  /**
+   * setting of the image dimensions is enforced
+   */
   width: number | `${number}%`;
+  /**
+   * setting of the image dimensions is enforced
+   */
   height: number | `${number}%`;
+  /**
+   * Holistic image source
+   */
   src: HolisticalImageDefinition;
+  /**
+   * Image settings for different media points
+   * @example
+   * <Image
+   *   src={bigImage}
+   *   media={{
+   *     '(max-width: 767px)': smallerImage
+   *   }}
+   * />
+   */
   media: Record<string, HolisticalImageDefinition>;
 };
 
