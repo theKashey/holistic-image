@@ -1,6 +1,6 @@
 {
   "name": "holistic-image",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Automatic image optimization and serving",
   "main": "dist/es5/index.js",
   "author": "Anton Korzunov <thekashey@gmail.com>",
