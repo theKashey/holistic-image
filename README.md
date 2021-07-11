@@ -76,6 +76,20 @@ import { Image } from 'holistical-image/react';
 <Image src={image} media={{ 'max-width: 600px': imageXS }} />;
 ```
 
+## Type Script integration
+
+While this library provides `d.ts` for the file extension it can be more beneficial
+to provide your own ones, as you did for `.jpg` and other static asses already
+
+```ts
+declare module '*.holistic.jpg' {
+  import type { HolisticalImageDefinition } from 'holistic-image';
+
+  const content: HolisticalImageDefinition;
+  export default content;
+}
+```
+
 # License
 
 MIT

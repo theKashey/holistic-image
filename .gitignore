@@ -1,3 +1,7 @@
-node_modules
-.env
-serviceAccountKey.json
+node_modules/
+/lib/
+/dist/
+.DS_Store
+.nyc_output
+yarn-error.log
+*.tgz
