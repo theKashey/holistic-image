@@ -1,6 +1,6 @@
-// @ts-ignore
 import { join, basename, dirname } from 'path';
 
+// @ts-ignore
 import { ImagePool } from '@squoosh/lib';
 import glob from 'glob';
 
