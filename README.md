@@ -1,5 +1,7 @@
 # holistic-image
 
+> Holism is the idea that various __systems should be viewed as wholes__, not merely as a collection of parts. 
+
 Build-time Automatic image transformation and Holistic management
 
 - 🍊 uses [squoosh](https://github.com/GoogleChromeLabs/squoosh/tree/dev/libsquoosh) to derive jpg, webp, avif from your
