@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "main": "../dist/es5/entrypoints/cli.js",
+  "jsnext:main": "../dist/es2015/entrypoints/cli.js",
+  "module": "../dist/es2015/entrypoints/cli.js",
+  "types": "../dist/es2015/entrypoints/cli.d.ts"
+}
