@@ -44,13 +44,13 @@ export const Image: FC<ComponentType> = ({ className, width, height, alt, priori
 
   return (
     <picture className={className}>
-      <Source images={src} media={undefined} />
       {Object
         ///
         .entries(media)
         .map(([point, images]) => (
           <Source images={images} media={point} key={point} />
         ))}
+      <Source images={src} media={undefined} />
       <img
         src={imagesBase[0]}
         srcSet={toDPISrcSet(imagesBase)}
