@@ -18,3 +18,4 @@ export const formats = {
 export const sizes = ['@1x', '@2x'];
 
 export const HOLISTIC_SIGNATURE = '.holistic';
+export const HOLISTIC_FOLDER = 'holistic';

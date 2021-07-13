@@ -1,5 +1,5 @@
 import fs from 'fs';
-
+import { dirname } from 'path';
 import { promisify } from 'util';
 
 const writeAsync = promisify(fs.writeFile);
@@ -36,5 +36,15 @@ export const deriveFiles = async (
 ) => {
   const newData = await generator(missingTargets);
 
-  return Promise.all(Object.keys(newData).map(async (target) => writeAsync(target, await newData[target])));
+  const fileList = Object.keys(newData);
+
+  if (fileList.length > 0) {
+    fs.mkdirSync(dirname(fileList[0]), { recursive: true });
+  }
+
+  return Promise.all(
+    fileList.map(async (target) => {
+      writeAsync(target, await newData[target]);
+    })
+  );
 };

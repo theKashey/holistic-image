@@ -10,7 +10,7 @@ export const imagePool = () => {
     // autoclear pool ref on pool close
     const clearRef = imagePoolRef;
 
-    imagePoolRef.done.then(() => {
+    imagePoolRef.workerPool.done.then(() => {
       if (clearRef === imagePoolRef) {
         imagePoolRef = undefined;
       }

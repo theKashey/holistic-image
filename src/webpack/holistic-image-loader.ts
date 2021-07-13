@@ -4,7 +4,7 @@ import glob from 'glob';
 // @ts-ignore // conflict with wp4/wp5
 import { getOptions } from 'loader-utils';
 
-import { defaultConverters, formats, sizes } from '../constants';
+import { defaultConverters, formats, HOLISTIC_FOLDER, HOLISTIC_SIGNATURE, sizes } from '../constants';
 import { deriveHolisticImage } from '../generator/image-converter';
 import { getDeriveTargets } from '../generator/targets';
 import { getMissingDeriveTargets } from '../utils/derived-files';
@@ -25,6 +25,32 @@ const findSize = (source: string): number => {
   return Math.max(0, index);
 };
 
+const locks = new Map<string, Promise<void>>();
+
+const acquireFileLock = async (fileName: string): Promise<{ release(): void }> => {
+  if (locks.has(fileName)) {
+    await locks.get(fileName);
+
+    return acquireFileLock(fileName);
+  } else {
+    let resolver: any;
+
+    locks.set(
+      fileName,
+      new Promise((res) => {
+        resolver = res;
+      })
+    );
+
+    return {
+      release() {
+        locks.delete(fileName);
+        resolver();
+      },
+    };
+  }
+};
+
 async function holisticImageLoader(this: any) {
   const callback = this.async();
   const options = {
@@ -35,21 +61,27 @@ async function holisticImageLoader(this: any) {
 
   const baseSource: string = this.resource;
   const basePath = dirname(baseSource);
-  const source = baseSource.substr(0, baseSource.indexOf('@'));
+  const source = baseSource.substr(0, baseSource.indexOf(HOLISTIC_SIGNATURE));
   const sourceName = basename(source);
 
   if (options.autogenerate) {
-    await deriveHolisticImage(
-      source,
-      await getMissingDeriveTargets(source, getDeriveTargets(source, Object.keys(options.converters))),
-      options.converters
-    );
+    const lock = await acquireFileLock(baseSource);
+
+    try {
+      await deriveHolisticImage(
+        baseSource,
+        await getMissingDeriveTargets(baseSource, getDeriveTargets(baseSource, Object.keys(options.converters))),
+        options.converters
+      );
+    } finally {
+      lock.release();
+    }
   }
 
   const imports: string[][] = [];
   const exports: Record<string, string[]> = {};
 
-  const expectedFolder = `${basePath}/derived/${sourceName}`;
+  const expectedFolder = `${basePath}/${HOLISTIC_FOLDER}/${sourceName}`;
   this.addContextDependency(expectedFolder);
 
   const images = glob.sync(`${expectedFolder}/*`);
@@ -57,11 +89,13 @@ async function holisticImageLoader(this: any) {
   const metaFile = metaFileIndex >= 0 ? images.splice(metaFileIndex, 1)[0] : undefined;
 
   if (!metaFile || !images.length) {
+    console.log('missing derivatives for ', baseSource, { expectedFolder, images, metaFile });
+
     return this.callback(new Error('holistic-images: no files have been derived'), undefined);
   }
 
   images.forEach((image) => {
-    this.addDepenency(image);
+    this.addDependency(image);
 
     const size = findSize(image);
     const type = findExt(image);
@@ -80,7 +114,7 @@ async function holisticImageLoader(this: any) {
   const newSource = `
 	${imports.map((file, index) => `import i${index} from './${file[0]}';// ${file[1]}`).join('\n')};
 	
-	import metaInformation from '${relative(basePath, metaFile)}';
+	import metaInformation from './${relative(basePath, metaFile)}';
 	import {IMAGE_META_DATA} from 'holistic-image'; 
   
   const imageDef = ${JSON.stringify(exports, null, 2).replace(/"/g, '')};

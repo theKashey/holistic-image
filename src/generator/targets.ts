@@ -2,9 +2,8 @@ import { basename, dirname, join } from 'path';
 
 import glob from 'glob';
 
-import { defaultConverters, HOLISTIC_SIGNATURE } from '../constants';
+import { defaultConverters, HOLISTIC_FOLDER, HOLISTIC_SIGNATURE } from '../constants';
 import { getMissingDeriveTargets } from '../utils/derived-files';
-
 
 export const is2X = (file: string) => file.includes('2x');
 
@@ -13,11 +12,11 @@ export const getDeriveTargets = (baseSource: string, extensions: string[]): stri
   const sizeSource: string[] = [is2X(source) && (source.replace('2x', '1x') as any), source];
   const baseFile = basename(source);
 
-  const dir = join(dirname(source), 'holistic', baseFile);
+  const dir = join(dirname(source), HOLISTIC_FOLDER, baseFile);
 
   return [
     ...sizeSource.flatMap((file) => extensions.map((ext) => join(dir, `derived.${basename(file)}.${ext}`))),
-    join(dir, `derived.${source}.meta.js`),
+    join(dir, `derived.${basename(source)}.meta.js`),
   ];
 };
 
@@ -53,6 +52,8 @@ export const findLooseDerivatives = (folder: string, mask: string): string[] => 
       //
       .sync(`${folder}/${mask}${HOLISTIC_SIGNATURE}.{jpg,png}`)
       .map((name) => name.substr(0, name.indexOf(HOLISTIC_SIGNATURE)))
+      // prefix normalization
+      .map((name) => join('', name))
   );
 
   const reported = new Set<string>();

@@ -34,6 +34,10 @@ const compress = async (targets: string[], source: any, converters: Record<strin
  * derives missing files
  */
 export const deriveHolisticImage = async (source: string, targets: string[], converters = defaultConverters) => {
+  if (!targets.length) {
+    return;
+  }
+
   return deriveFiles(targets, async (missingTargets) => {
     const imageSource = imagePool().ingestImage(source);
     const imageInfo = await imageSource.decoded;
