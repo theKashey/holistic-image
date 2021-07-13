@@ -10,6 +10,34 @@ Build-time Automatic image transformation and Holistic management
 - 🤖 on demand file creation, and CLI utils to verify integrity
 - ⚛️ optional React implementation
 
+# Structure
+
+This is a _convention over configuration_ library, and all you need is to follow our convention
+
+Having ➡️
+
+```
+├── image@2x.holistic.png
+```
+
+️Will produce ⬇️
+
+```
+├── image@2x.holistic.png
+├── holistic
+│   └─ image@2x
+│      ├─ derived.image@1x.jpg
+│      ├─ derived.image@1x.webp
+│      ├─ derived.image@1x.avif
+│      ├─ derived.image@2x.jpg
+│      ├─ derived.image@2x.webp
+│      ├─ derived.image@2x.avif
+│      └─ derived.image@2x.meta.js
+```
+
+The same principle will be applied during the import - instead of importing `image@2x.holistic.png` you will get
+a pointer to all files below
+
 # Usage
 
 ## Step 1 - derive files
