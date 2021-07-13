@@ -1,9 +1,8 @@
 import { dirname, basename, relative } from 'path';
 
-// @ts-ignore // conflict with wp4/wp5
 import glob from 'glob';
+// @ts-ignore // conflict with wp4/wp5
 import { getOptions } from 'loader-utils';
-
 
 import { defaultConverters, formats, sizes } from '../constants';
 import { deriveHolisticImage } from '../generator/image-converter';
