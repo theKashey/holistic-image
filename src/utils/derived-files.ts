@@ -41,7 +41,7 @@ export const deriveFiles = async (
   if (fileList.length > 0) {
     const targetFolder = dirname(fileList[0]);
 
-    if (fs.existsSync(targetFolder)) {
+    if (!fs.existsSync(targetFolder)) {
       console.log('create folder: ', targetFolder);
       fs.mkdirSync(targetFolder, { recursive: true });
     }
