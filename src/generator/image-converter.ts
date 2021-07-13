@@ -53,7 +53,7 @@ export const deriveHolisticImage = async (source: string, targets: string[], con
 
     if (is2X(source)) {
       const x2 = await compress(
-        missingTargets.filter((x) => x.includes('@2x')),
+        missingTargets.filter((x) => x.includes('@2x.')),
         imageSource,
         converters
       );
@@ -66,7 +66,7 @@ export const deriveHolisticImage = async (source: string, targets: string[], con
       });
 
       const x1 = await compress(
-        missingTargets.filter((x) => x.includes('@1x')),
+        missingTargets.filter((x) => x.includes('@1x.')),
         imageSource,
         converters
       );

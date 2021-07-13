@@ -5,7 +5,7 @@ import glob from 'glob';
 import { defaultConverters, HOLISTIC_FOLDER, HOLISTIC_SIGNATURE } from '../constants';
 import { getMissingDeriveTargets } from '../utils/derived-files';
 
-export const is2X = (file: string) => file.includes('2x');
+export const is2X = (file: string) => file.includes('@2x');
 
 export const getDeriveTargets = (baseSource: string, extensions: string[]): string[] => {
   const source = baseSource.substr(0, baseSource.indexOf(HOLISTIC_SIGNATURE));

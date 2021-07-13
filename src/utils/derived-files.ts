@@ -39,12 +39,17 @@ export const deriveFiles = async (
   const fileList = Object.keys(newData);
 
   if (fileList.length > 0) {
-    fs.mkdirSync(dirname(fileList[0]), { recursive: true });
+    const targetFolder = dirname(fileList[0]);
+
+    if (fs.existsSync(targetFolder)) {
+      console.log('create folder: ', targetFolder);
+      fs.mkdirSync(targetFolder, { recursive: true });
+    }
   }
 
   return Promise.all(
     fileList.map(async (target) => {
-      writeAsync(target, await newData[target]);
+      return writeAsync(target, await newData[target]);
     })
   );
 };
