@@ -1,6 +1,6 @@
 # holistic-image
 
-> Holism is the idea that various __systems should be viewed as wholes__, not merely as a collection of parts. 
+> Holism is the idea that various **systems should be viewed as wholes**, not merely as a collection of parts.
 
 Build-time Automatic image transformation and Holistic management
 
@@ -32,7 +32,9 @@ deriveHolisticImages(
 // /*optional*/ squoosh ecoders with options
 )
 ```
-+
+
+-
+
 ```
 // package.json
  "autogen:images": "yarn generate-images.js $INIT_CWD 'src/**/*'",
@@ -42,7 +44,8 @@ deriveHolisticImages(
 
 ```
 // package.json
-"autogen:images":"yarn node_modules/holistic-image/cli $INIT_CWD 'src/**/*'"
+"autogen:images":"holistic-image derive  $INIT_CWD 'src/**/*'"
+"validate:images":"holistic-image validate  $INIT_CWD 'src/**/*'"
 ```
 
 ## Step 2 - configure webpack to process images
@@ -97,7 +100,9 @@ declare module '*.holistic.jpg' {
   export default content;
 }
 ```
+
 # See also
+
 - [imagemin](https://github.com/imagemin/imagemin) (unmaintaned) the same _defiving_ mechanics, with no further management
 - [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader) not creates, but optimizes existing images
 - [nextjs/image](https://nextjs.org/docs/api-reference/next/image) serves optimized image via CDN transformation
