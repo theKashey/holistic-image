@@ -7,6 +7,7 @@ Build-time Automatic image transformation and Holistic management
 - 🍊 uses [squoosh](https://github.com/GoogleChromeLabs/squoosh/tree/dev/libsquoosh) to derive jpg, webp, avif from your
   sources
 - 📦 hides implementation details behind Webpack
+- 🤖 on demand file creation, and CLI utils to verify integrity
 - ⚛️ optional React implementation
 
 # Usage
@@ -20,6 +21,8 @@ If the source file named as `image@2x.jpg`(Figma standard), then `@1x` version w
 
 ### How to use
 
+- via Webpack loader
+  Just use webpack loader with `autogenerate` option enabled (default)
 - via API
 
 ```ts
@@ -33,7 +36,7 @@ deriveHolisticImages(
 )
 ```
 
--
+And then in `package.json`
 
 ```
 // package.json
