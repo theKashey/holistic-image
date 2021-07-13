@@ -54,7 +54,8 @@ const acquireFileLock = async (fileName: string): Promise<{ release(): void }> =
 async function holisticImageLoader(this: any) {
   const callback = this.async();
   const options = {
-    autogenerate: true,
+    // enable autogenerate only in dev mode
+    autogenerate: process.env.NODE_ENV === 'development',
     converters: defaultConverters,
     ...getOptions(this),
   };
@@ -91,7 +92,7 @@ async function holisticImageLoader(this: any) {
   if (!metaFile || !images.length) {
     console.log('missing derivatives for ', baseSource, { expectedFolder, images, metaFile });
 
-    return this.callback(new Error('holistic-images: no files have been derived'), undefined);
+    return this.callback(new Error(`holistic-images: no files have been derived for "${baseSource}"`), undefined);
   }
 
   images.forEach((image) => {

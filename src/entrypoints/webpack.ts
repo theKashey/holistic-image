@@ -1,4 +1,5 @@
-import holisticImageLoader from '../webpack/holistic-image-loader';
-import { holisticImage } from '../webpack/preset';
+import { holisticImage, productionHolisticImage } from '../webpack/preset';
 
-export { holisticImageLoader, holisticImage };
+const holisticImageLoader = require.resolve('../webpack/holistic-image-loader');
+
+export { holisticImageLoader, holisticImage, productionHolisticImage };
