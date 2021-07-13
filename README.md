@@ -24,7 +24,7 @@ Having ➡️
 
 ```
 ├── image@2x.holistic.png
-├── holistic
+├── .holistic (you can hide this directory)
 │   └─ image@2x
 │      ├─ derived.image@1x.jpg
 │      ├─ derived.image@1x.webp
@@ -129,6 +129,25 @@ declare module '*.holistic.jpg' {
 
   const content: HolisticalImageDefinition;
   export default content;
+}
+```
+
+# Hiding .holistic output files
+
+folders starting from `.` already expected to be hidden for IDE, but keep in mind -
+derived files are **expected to be commited**.
+
+## WebStorm/IDEA
+
+You can use [idea-exclude] to automaticaly configure Idea-based solutions to _exclude_ these folders
+
+- run `idea-exclude holistic-images "src/**/.holistic"`
+
+## VCS
+
+```
+"files.exclude": {
+    "**/.holistic": true
 }
 ```
 

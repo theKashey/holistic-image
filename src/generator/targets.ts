@@ -2,7 +2,7 @@ import { basename, dirname, join } from 'path';
 
 import glob from 'glob';
 
-import { defaultConverters, HOLISTIC_FOLDER, HOLISTIC_SIGNATURE } from '../constants';
+import { defaultConverters, DERIVED_PREFIX, HOLISTIC_FOLDER, HOLISTIC_SIGNATURE } from '../constants';
 import { getMissingDeriveTargets } from '../utils/derived-files';
 
 export const is2X = (file: string) => file.includes('@2x');
@@ -15,8 +15,8 @@ export const getDeriveTargets = (baseSource: string, extensions: string[]): stri
   const dir = join(dirname(source), HOLISTIC_FOLDER, baseFile);
 
   return [
-    ...sizeSource.flatMap((file) => extensions.map((ext) => join(dir, `derived.${basename(file)}.${ext}`))),
-    join(dir, `derived.${basename(source)}.meta.js`),
+    ...sizeSource.flatMap((file) => extensions.map((ext) => join(dir, `${DERIVED_PREFIX}${basename(file)}.${ext}`))),
+    join(dir, `${DERIVED_PREFIX}${basename(source)}.meta.js`),
   ];
 };
 
@@ -28,7 +28,7 @@ export const findDeriveTargets = async (
   mask: string,
   extensions: string[] = Object.keys(defaultConverters)
 ) => {
-  const pattern = `${folder}/${mask}${HOLISTIC_SIGNATURE}.{jpg,png}`;
+  const pattern = `${folder}/${mask}${HOLISTIC_SIGNATURE}{jpg,png}`;
   const icons = glob.sync(pattern);
 
   const pairs = await Promise.all(
@@ -50,7 +50,7 @@ export const findLooseDerivatives = (folder: string, mask: string): string[] => 
   const sources = new Set(
     glob
       //
-      .sync(`${folder}/${mask}${HOLISTIC_SIGNATURE}.{jpg,png}`)
+      .sync(`${folder}/${mask}${HOLISTIC_SIGNATURE}{jpg,png}`)
       .map((name) => name.substr(0, name.indexOf(HOLISTIC_SIGNATURE)))
       // prefix normalization
       .map((name) => join('', name))
