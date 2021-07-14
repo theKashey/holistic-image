@@ -95,6 +95,10 @@ webpack.config = {
   },
 };
 ```
+- automatic image generation will be enabled if `process.env.NODE_ENV` is set to `development`
+- to fine control settings use:
+  - `import { holisticImagePresetFactory } from 'holistic-image/webpack';`
+  - `import { holisticImageLoader } from 'holistic-image/webpack';`
 
 - Easy config (for storybook for example), everything will work as well
 
@@ -157,7 +161,7 @@ commited**.
 
 ## WebStorm/IDEA
 
-You can use [idea-exclude] to automaticaly configure Idea-based solutions to _exclude_ these folders
+You can use [idea-exclude](https://github.com/theKashey/idea-exclude) to automaticaly configure Idea-based solutions to _exclude_ these folders
 
 - run `idea-exclude holistic-images "src/**/.holistic"`
 
