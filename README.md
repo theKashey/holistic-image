@@ -35,8 +35,8 @@ Having ➡️
 │      └─ derived.image@2x.meta.js
 ```
 
-The same principle will be applied during the import - instead of importing `image@2x.holistic.png` you will get
-a pointer to all files below
+The same principle will be applied during the import - instead of importing `image@2x.holistic.png` you will get a
+pointer to all files below
 
 # Usage
 
@@ -49,8 +49,7 @@ If the source file named as `image@2x.jpg`(Figma standard), then `@1x` version w
 
 ### How to use
 
-- via Webpack loader
-  Just use webpack loader with `autogenerate` option enabled (default)
+- via Webpack loader Just use webpack loader with `autogenerate` option enabled (default)
 - via API
 
 ```ts
@@ -58,8 +57,9 @@ If the source file named as `image@2x.jpg`(Figma standard), then `@1x` version w
 import {deriveHolisticImages} from "holistic-image/api";
 
 deriveHolisticImages(
-/root folder*/ process.argv[2],
-/*mask*/ process.argv[3],
+  /root folder*/
+process.argv[2],
+  /*mask*/ process.argv[3],
 // /*optional*/ squoosh ecoders with options
 )
 ```
@@ -81,6 +81,23 @@ And then in `package.json`
 
 ## Step 2 - configure webpack to process images
 
+- Optimized config, will remove originals from the final bundle
+
+```ts
+import { holisticImage } from 'holistic-image/webpack';
+
+webpack.config = {
+  module: {
+    rules: {
+      oneOf: [holisticImage, yourFileLoader],
+      // .. rest of your config
+    },
+  },
+};
+```
+
+- Easy config (for storybook for example), everything will work as well
+
 ```ts
 import { holisticImage } from 'holistic-image/webpack';
 
@@ -88,7 +105,8 @@ webpack.config = {
   module: {
     rules: {
       holisticImage,
-      // .. rest of your config
+      yourFileLoader,
+      // .. and rest of your config
     },
   },
 };
@@ -120,8 +138,8 @@ import imageXS from './imageXS.holistic.jpg';
 
 ## Type Script integration
 
-While this library provides `d.ts` for the file extension it can be more beneficial
-to provide your own ones, as you did for `.jpg` and other static asses already
+While this library provides `d.ts` for the file extension it can be more beneficial to provide your own ones, as you did
+for `.jpg` and other static asses already
 
 ```ts
 declare module '*.holistic.jpg' {
@@ -134,8 +152,8 @@ declare module '*.holistic.jpg' {
 
 # Hiding .holistic output files
 
-folders starting from `.` already expected to be hidden for IDE, but keep in mind -
-derived files are **expected to be commited**.
+folders starting from `.` already expected to be hidden for IDE, but keep in mind - derived files are **expected to be
+commited**.
 
 ## WebStorm/IDEA
 
@@ -153,7 +171,8 @@ You can use [idea-exclude] to automaticaly configure Idea-based solutions to _ex
 
 # See also
 
-- [imagemin](https://github.com/imagemin/imagemin) (unmaintaned) the same _defiving_ mechanics, with no further management
+- [imagemin](https://github.com/imagemin/imagemin) (unmaintaned) the same _defiving_ mechanics, with no further
+  management
 - [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader) not creates, but optimizes existing images
 - [nextjs/image](https://nextjs.org/docs/api-reference/next/image) serves optimized image via CDN transformation
 

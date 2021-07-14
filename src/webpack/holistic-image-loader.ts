@@ -55,7 +55,7 @@ async function holisticImageLoader(this: any) {
   const callback = this.async();
   const options = {
     // enable autogenerate only in dev mode
-    autogenerate: process.env.NODE_ENV === 'development',
+    autogenerate: this.mode === 'development',
     converters: defaultConverters,
     ...getOptions(this),
   };
