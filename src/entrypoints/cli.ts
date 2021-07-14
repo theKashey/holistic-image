@@ -7,15 +7,24 @@ const program = new Command();
 
 program
   .command('derive <folder> <mask>')
+  .option('--exclude', 'exclude path', 'node_modules')
   .description('creates derivative image from .holistic source')
-  .action((folder, mask) => {
-    return deriveHolisticImages(folder, mask);
+  .action((folder, include, options) => {
+    return deriveHolisticImages(folder, {
+      include,
+      exclude: options.exclude,
+    });
   });
 
 program
   .command('verify <folder> <mask>')
+  .option('--exclude', 'exclude path', 'node_modules')
   .description('check operation integrity - all files derived, nothing left over')
-  .action(async (folder, mask) => {
+  .action(async (folder, include, options) => {
+    const mask = {
+      include,
+      exclude: options.exclude,
+    };
     const targets = await findDeriveTargets(folder, mask);
 
     if (targets.length > 0) {

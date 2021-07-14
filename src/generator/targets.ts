@@ -5,6 +5,8 @@ import glob from 'glob';
 import { defaultConverters, DERIVED_PREFIX, HOLISTIC_FOLDER, HOLISTIC_SIGNATURE } from '../constants';
 import { getMissingDeriveTargets } from '../utils/derived-files';
 
+export type Mask = string | { include: string; exclude: string };
+
 export const is2X = (file: string) => file.includes('@2x');
 
 export const getDeriveTargets = (baseSource: string, extensions: string[]): string[] => {
@@ -20,16 +22,33 @@ export const getDeriveTargets = (baseSource: string, extensions: string[]): stri
   ];
 };
 
+const findSource = (folder: string, mask: Mask): string[] => {
+  if (typeof mask === 'string') {
+    return (
+      glob
+        //
+        .sync(`${folder}/${mask}${HOLISTIC_SIGNATURE}{jpg,png}`)
+    );
+  }
+
+  return (
+    glob
+      //
+      .sync(`${folder}/${mask.include}${HOLISTIC_SIGNATURE}{jpg,png}`, {
+        ignore: mask.exclude,
+      })
+  );
+};
+
 /**
  * finds files yet to be derived
  */
 export const findDeriveTargets = async (
   folder: string,
-  mask: string,
+  mask: Mask,
   extensions: string[] = Object.keys(defaultConverters)
 ) => {
-  const pattern = `${folder}/${mask}${HOLISTIC_SIGNATURE}{jpg,png}`;
-  const icons = glob.sync(pattern);
+  const icons = findSource(folder, mask);
 
   const pairs = await Promise.all(
     icons.map(async (source) => ({
@@ -46,11 +65,9 @@ export const findDeriveTargets = async (
  * @param folder
  * @param mask
  */
-export const findLooseDerivatives = (folder: string, mask: string): string[] => {
+export const findLooseDerivatives = (folder: string, mask: Mask): string[] => {
   const sources = new Set(
-    glob
-      //
-      .sync(`${folder}/${mask}${HOLISTIC_SIGNATURE}{jpg,png}`)
+    findSource(folder, mask)
       .map((name) => name.substr(0, name.indexOf(HOLISTIC_SIGNATURE)))
       // prefix normalization
       .map((name) => join('', name))
