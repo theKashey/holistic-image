@@ -38,6 +38,8 @@ Having ➡️
 The same principle will be applied during the import - instead of importing `image@2x.holistic.png` you will get
 a pointer to all files below
 
+> Note: holistic-image does not producing `png` output (configurable) as the end user is expected to use `webp` or `avif`
+
 # Usage
 
 ## Step 1 - derive files
