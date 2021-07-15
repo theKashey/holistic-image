@@ -2,6 +2,8 @@ import fs from 'fs';
 import { dirname } from 'path';
 import { promisify } from 'util';
 
+import { MTIME_COMPARE_DELTA } from '../constants';
+
 const writeAsync = promisify(fs.writeFile);
 const stat = promisify(fs.stat);
 
@@ -14,7 +16,7 @@ const isNewer = (source: Date | number | undefined, target: Date | number | unde
     return true;
   }
 
-  return source > target;
+  return +source - +target > MTIME_COMPARE_DELTA;
 };
 
 type Writeable = string | Buffer;
