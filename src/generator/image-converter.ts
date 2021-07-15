@@ -44,14 +44,24 @@ export const deriveHolisticImage = async (source: string, targets: string[], con
 
     const metaFileIndex = missingTargets.findIndex((x) => x.includes('.meta.js'));
     const metaResult: any = {};
+    const imageIs2X = is2X(source);
 
     if (metaFileIndex >= 0) {
       const metaFile = missingTargets.splice(metaFileIndex, 1)[0];
 
-      metaResult[metaFile] = `export default { width: ${imageInfo.bitmap.width}, height: ${imageInfo.bitmap.height} }`;
+      const metaSizeFactor = imageIs2X ? 0.5 : 1;
+
+      metaResult[metaFile] = `
+/* AUTO GENERATED FILE! */
+/* eslint-disable */
+export default { 
+  width: ${imageInfo.bitmap.width * metaSizeFactor}, 
+  height: ${imageInfo.bitmap.height * metaSizeFactor}, 
+  ratio: ${(imageInfo.bitmap.width / imageInfo.bitmap.height) * metaSizeFactor}, 
+}`;
     }
 
-    if (is2X(source)) {
+    if (imageIs2X) {
       const x2 = await compress(
         missingTargets.filter((x) => x.includes('@2x.')),
         imageSource,
