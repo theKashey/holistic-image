@@ -53,7 +53,7 @@ export const deriveHolisticImage = async (source: string, targets: string[], con
 
       metaResult[metaFile] = `
 /* AUTO GENERATED FILE! */
-/* eslint-disable prettier/prettier */
+/* eslint-disable */
 export default { 
   width: ${imageInfo.bitmap.width * metaSizeFactor}, 
   height: ${imageInfo.bitmap.height * metaSizeFactor}, 
