@@ -15,6 +15,9 @@ export const formats = {
   avif: ['.avif'],
 };
 
+// allow 1 second difference between original and derived file
+export const MTIME_COMPARE_DELTA = 1000;
+
 export const sizes = ['@1x', '@2x'];
 
 export const DERIVED_PREFIX = 'derived.';
