@@ -11,7 +11,7 @@ export const is2X = (file: string) => file.includes('@2x');
 
 export const getDeriveTargets = (baseSource: string, extensions: string[]): string[] => {
   const source = baseSource.substr(0, baseSource.indexOf(HOLISTIC_SIGNATURE));
-  const sizeSource: string[] = [is2X(source) && (source.replace('2x', '1x') as any), source];
+  const sizeSource: string[] = is2X(source) ? [source.replace('2x', '1x'), source] : [source];
   const baseFile = basename(source);
 
   const dir = join(dirname(source), HOLISTIC_FOLDER, baseFile);
