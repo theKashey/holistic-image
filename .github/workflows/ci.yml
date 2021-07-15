@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request: {}
+
+jobs:
+  test:
+    name: test node v${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [12, 16]
+    steps:
+      - uses: actions/checkout@main
+
+      - name: (env) setup node v${{ matrix.node }}
+        uses: actions/setup-node@main
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: (env) node_modules cache
+        id: node_modules_cache
+        uses: actions/cache@main
+        with:
+          path: /tmp/node_modules
+          key: ${{ runner.os }}-node-${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+      - name: (env) restore node_modules
+        if: steps.node_modules_cache.outputs.cache-hit == 'true'
+        run: lz4 -d /tmp/node_modules | tar -xf - ; # decompress
+
+      - name: Install
+        run: yarn --pure-lockfile
+
+      - name: (env) prepare node_modules cache
+        run: tar -cf - node_modules | lz4 > /tmp/node_modules # compress
+
+      - name: Compiles
+        run: yarn run build
+
+      #- name: Test
+      #  run: yarn run test:ci
+
+      - name: Check Types
+        run: yarn run typecheck
