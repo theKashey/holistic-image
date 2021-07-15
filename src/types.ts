@@ -5,5 +5,5 @@ export type HolisticalImageDefinition = {
   webp?: string[];
   base: string[];
 
-  [IMAGE_META_DATA]: { width: number; height: number };
+  [IMAGE_META_DATA]: { width: number; height: number; ratio: number };
 };
