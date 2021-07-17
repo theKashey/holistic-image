@@ -2,8 +2,9 @@ import { basename, dirname, join } from 'path';
 
 import glob from 'glob';
 
-import { defaultConverters, DERIVED_PREFIX, HOLISTIC_FOLDER, HOLISTIC_SIGNATURE } from '../constants';
+import { DERIVED_PREFIX, HOLISTIC_FOLDER, HOLISTIC_SIGNATURE } from '../constants';
 import { getMissingDeriveTargets } from '../utils/derived-files';
+import { getConfiguration, getConverters } from '../utils/get-config';
 
 export type Mask = string | { include: string; exclude: string };
 
@@ -46,14 +47,15 @@ const findSource = (folder: string, mask: Mask): string[] => {
 export const findDeriveTargets = async (
   folder: string,
   mask: Mask,
-  extensions: string[] = Object.keys(defaultConverters)
+  extensions: string[] = Object.keys(getConverters()),
+  era: Date | undefined = getConfiguration().era
 ) => {
   const icons = findSource(folder, mask);
 
   const pairs = await Promise.all(
     icons.map(async (source) => ({
       source,
-      targets: await getMissingDeriveTargets(source, getDeriveTargets(source, extensions)),
+      targets: await getMissingDeriveTargets(source, getDeriveTargets(source, extensions), { era }),
     }))
   );
 

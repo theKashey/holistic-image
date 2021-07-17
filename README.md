@@ -97,8 +97,10 @@ webpack.config = {
   },
 };
 ```
+
 - automatic image generation will be enabled if `process.env.NODE_ENV` is set to `development`
 - to fine control settings use:
+
   - `import { holisticImagePresetFactory } from 'holistic-image/webpack';`
   - `import { holisticImageLoader } from 'holistic-image/webpack';`
 
@@ -142,7 +144,7 @@ import imageXS from './imageXS.holistic.jpg';
 // 👇 6-12 images generated, the right picked, completely transparent
 ```
 
-## Type Script integration
+## TypeScript integration
 
 While this library provides `d.ts` for the file extension it can be more beneficial to provide your own ones, as you did
 for `.jpg` and other static asses already
@@ -156,6 +158,45 @@ declare module '*.holistic.jpg' {
 }
 ```
 
+# Configuration
+
+Configuration is possible in two modes:
+
+- full control via API
+- config-file based (via [cosmic-config](https://github.com/davidtheclark/cosmiconfig))
+
+<details>
+<summary>Example configuration:</summary>
+
+> `.holistic-imagerc.yaml` (can be json or js as well)
+
+```yml
+# derived from https://github.com/GoogleChromeLabs/squoosh/blob/61de471e52147ecdc8ff674f3fcd3bbf69bb214a/libsquoosh/src/codecs.ts
+---
+jpg:
+  use: mozjpeg
+  # with default 75
+  options:
+    - quality: 80 # for scale 1x
+    - quality: 70 # for scale 2x
+webp:
+  use: webp
+  # with default 75
+  options:
+    - quality: 85
+      method: 6
+avif:
+  use: avif
+  # with default 33
+  options:
+    - cqLevel: 20
+      effort: 5
+    - cqLevel: 28
+      effort: 5
+```
+
+</details>
+
 # Hiding .holistic output files
 
 folders starting from `.` already expected to be hidden for IDE, but keep in mind - derived files are **expected to be
@@ -163,7 +204,8 @@ commited**.
 
 ## WebStorm/IDEA
 
-You can use [idea-exclude](https://github.com/theKashey/idea-exclude) to automaticaly configure Idea-based solutions to _exclude_ these folders
+You can use [idea-exclude](https://github.com/theKashey/idea-exclude) to automaticaly configure Idea-based solutions
+to _exclude_ these folders
 
 - run `idea-exclude holistic-images "src/**/.holistic"`
 

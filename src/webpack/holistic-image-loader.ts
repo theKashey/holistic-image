@@ -4,10 +4,11 @@ import glob from 'glob';
 // @ts-ignore // conflict with wp4/wp5
 import { getOptions } from 'loader-utils';
 
-import { defaultConverters, formats, HOLISTIC_FOLDER, HOLISTIC_SIGNATURE, sizes } from '../constants';
+import { formats, HOLISTIC_FOLDER, HOLISTIC_SIGNATURE, sizes } from '../constants';
 import { deriveHolisticImage } from '../generator/image-converter';
 import { getDeriveTargets } from '../generator/targets';
 import { getMissingDeriveTargets } from '../utils/derived-files';
+import { getConfiguration } from '../utils/get-config';
 
 const findExt = (source: string): keyof typeof formats | undefined => {
   const match = Object
@@ -56,7 +57,8 @@ async function holisticImageLoader(this: any) {
   const options = {
     // enable autogenerate only in dev mode
     autogenerate: this.mode === 'development',
-    converters: defaultConverters,
+    ...getConfiguration(),
+
     ...getOptions(this),
   };
 
@@ -71,7 +73,9 @@ async function holisticImageLoader(this: any) {
     try {
       await deriveHolisticImage(
         baseSource,
-        await getMissingDeriveTargets(baseSource, getDeriveTargets(baseSource, Object.keys(options.converters))),
+        await getMissingDeriveTargets(baseSource, getDeriveTargets(baseSource, Object.keys(options.converters)), {
+          era: options.era,
+        }),
         options.converters
       );
     } finally {

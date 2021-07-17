@@ -1,8 +1,20 @@
-import { defaultConverters } from '../constants';
-import type { TargetFormat, SourceOptions } from '../types';
+import type { TargetFormat, SourceOptions, OptionsFor } from '../types';
 import { deriveFiles } from '../utils/derived-files';
+import { getConverters } from '../utils/get-config';
 import { imagePool } from './image-pool';
 import { is2X } from './targets';
+
+const pickOptions = <T>(options: OptionsFor<T>, sourceOptions: SourceOptions): T => {
+  if (Array.isArray(options)) {
+    return options[sourceOptions.scale - 1] || options[0];
+  }
+
+  if (typeof options === 'function') {
+    return options(sourceOptions);
+  }
+
+  return options as T;
+};
 
 const compress = async (
   targets: string[],
@@ -24,7 +36,7 @@ const compress = async (
     if (target) {
       const encoder = converters[ext];
       const codecOptions = encoder.options || {};
-      encodeOptions[encoder.use] = typeof codecOptions === 'function' ? codecOptions(options) : codecOptions;
+      encodeOptions[encoder.use] = pickOptions(codecOptions, options);
       matching[encoder.use] = target;
     }
   });
@@ -43,7 +55,7 @@ const compress = async (
 /**
  * derives missing files
  */
-export const deriveHolisticImage = async (source: string, targets: string[], converters = defaultConverters) => {
+export const deriveHolisticImage = async (source: string, targets: string[], converters = getConverters()) => {
   if (!targets.length) {
     return;
   }

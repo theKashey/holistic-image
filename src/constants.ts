@@ -7,7 +7,10 @@ export const defaultConverters: Record<string, TargetFormat> = {
   // with default 75
   webp: { use: 'webp', options: ({ scale }) => (scale == 1 ? { quality: 85, method: 6 } : { quality: 75, method: 5 }) },
   // with default 33 (63-30)
-  avif: { use: 'avif', options: ({ scale }) => (scale == 1 ? { cqLevel: 63 - 46 } : { cqLevel: 63 - 40 }) },
+  avif: {
+    use: 'avif',
+    options: ({ scale }) => (scale == 1 ? { cqLevel: 63 - 43, effort: 5 } : { cqLevel: 63 - 35, effort: 5 }),
+  },
 };
 
 export const formats = {

@@ -63,8 +63,9 @@ type AvifOptions = {
 };
 
 export type SourceOptions = { scale: 1 | 2 };
+export type DeriveSettings = { era?: number };
 
-type OptionsFor<T> = T | ((x: SourceOptions) => T);
+export type OptionsFor<T> = T extends () => any ? never : T | T[] | ((x: SourceOptions) => T);
 
 export type TargetFormat =
   | {
