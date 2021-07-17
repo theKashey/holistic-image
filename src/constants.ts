@@ -1,12 +1,13 @@
-export type TargetFormat = {
-  use: 'mozjpeg' | 'webp' | 'avif';
-  options: any;
-};
+import { TargetFormat } from './types';
 
+// derived from https://github.com/GoogleChromeLabs/squoosh/blob/61de471e52147ecdc8ff674f3fcd3bbf69bb214a/libsquoosh/src/codecs.ts
 export const defaultConverters: Record<string, TargetFormat> = {
-  jpg: { use: 'mozjpeg', options: {} },
-  webp: { use: 'webp', options: {} },
-  avif: { use: 'avif', options: {} },
+  // with default 75
+  jpg: { use: 'mozjpeg', options: ({ scale }) => (scale == 1 ? { quality: 80 } : { quality: 70 }) },
+  // with default 75
+  webp: { use: 'webp', options: ({ scale }) => (scale == 1 ? { quality: 85, method: 6 } : { quality: 75, method: 5 }) },
+  // with default 33 (63-30)
+  avif: { use: 'avif', options: ({ scale }) => (scale == 1 ? { cqLevel: 63 - 46 } : { cqLevel: 63 - 40 }) },
 };
 
 export const formats = {

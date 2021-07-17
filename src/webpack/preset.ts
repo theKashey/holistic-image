@@ -1,6 +1,7 @@
 import type webpack from 'webpack';
 
-import { HOLISTIC_SIGNATURE, TargetFormat } from '../constants';
+import { HOLISTIC_SIGNATURE } from '../constants';
+import type { TargetFormat } from '../types';
 
 export const holisticImage: webpack.RuleSetRule = {
   test: new RegExp(`${HOLISTIC_SIGNATURE}(jpg|png)$`),

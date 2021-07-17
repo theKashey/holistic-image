@@ -1,10 +1,19 @@
-import { TargetFormat } from '../constants';
 import { defaultConverters } from '../constants';
+import type { TargetFormat, SourceOptions } from '../types';
 import { deriveFiles } from '../utils/derived-files';
 import { imagePool } from './image-pool';
 import { is2X } from './targets';
 
-const compress = async (targets: string[], source: any, converters: Record<string, TargetFormat>) => {
+const compress = async (
+  targets: string[],
+  source: any,
+  converters: Record<string, TargetFormat>,
+  options: SourceOptions
+): Promise<Record<string, Promise<Buffer>>> => {
+  if (!targets.length) {
+    return {};
+  }
+
   const matching: Record<string, string> = {};
   const encodeOptions: Record<string, any> = {};
   const extensions = Object.keys(converters);
@@ -14,7 +23,8 @@ const compress = async (targets: string[], source: any, converters: Record<strin
 
     if (target) {
       const encoder = converters[ext];
-      encodeOptions[encoder.use] = encoder.options || {};
+      const codecOptions = encoder.options || {};
+      encodeOptions[encoder.use] = typeof codecOptions === 'function' ? codecOptions(options) : codecOptions;
       matching[encoder.use] = target;
     }
   });
@@ -65,7 +75,10 @@ export default {
       const x2 = await compress(
         missingTargets.filter((x) => x.includes('@2x.')),
         imageSource,
-        converters
+        converters,
+        {
+          scale: 2,
+        }
       );
 
       await imageSource.preprocess({
@@ -78,7 +91,10 @@ export default {
       const x1 = await compress(
         missingTargets.filter((x) => x.includes('@1x.')),
         imageSource,
-        converters
+        converters,
+        {
+          scale: 1,
+        }
       );
 
       return { ...metaResult, ...x1, ...x2 };
@@ -86,7 +102,9 @@ export default {
 
     return {
       ...metaResult,
-      ...(await compress(missingTargets, imageSource, converters)),
+      ...(await compress(missingTargets, imageSource, converters, {
+        scale: 1,
+      })),
     };
   });
 };
