@@ -8,7 +8,7 @@ import { getConfiguration, getConverters } from '../utils/get-config';
 
 export type Mask = string | { include: string; exclude: string };
 
-export const is2X = (file: string) => file.includes('@2x');
+export const is2X = (file: string): boolean => file.includes('@2x');
 
 export const getDeriveTargets = (baseSource: string, extensions: string[]): string[] => {
   const source = baseSource.substr(0, baseSource.indexOf(HOLISTIC_SIGNATURE));
@@ -20,6 +20,7 @@ export const getDeriveTargets = (baseSource: string, extensions: string[]): stri
   return [
     ...sizeSource.flatMap((file) => extensions.map((ext) => join(dir, `${DERIVED_PREFIX}${basename(file)}.${ext}`))),
     join(dir, `${DERIVED_PREFIX}${basename(source)}.meta.js`),
+    join(dir, `${DERIVED_PREFIX}meta.scss`),
   ];
 };
 

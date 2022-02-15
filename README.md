@@ -32,13 +32,14 @@ Having ➡️
 │      ├─ derived.image@2x.jpg
 │      ├─ derived.image@2x.webp
 │      ├─ derived.image@2x.avif
+|      ├─ derived.scss
 │      └─ derived.image@2x.meta.js
 ```
 
 The same principle will be applied during the import - instead of importing `image@2x.holistic.png` you will get a
 pointer to all files below
 
-> Note: holistic-image does not producing `png` output (configurable) as the end user is expected to use `webp` or `avif`
+> Note: holistic-image does not produce `png` output (configurable) as the end user is expected to use `webp` or `avif`
 
 # Usage
 
@@ -129,7 +130,7 @@ image = {
   base: [1x, 2x],
   webp: [1x, 2x],
   avif: [1x, 2x],
-  [META]: {width, height}
+  [META]: {width, height, ratio}
 }
 ```
 

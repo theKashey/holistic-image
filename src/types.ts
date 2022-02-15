@@ -86,5 +86,22 @@ export type HolisticalImageDefinition = {
   webp?: string[];
   base: string[];
 
-  [IMAGE_META_DATA]: { width: number; height: number; ratio: number };
+  [IMAGE_META_DATA]: {
+    /**
+     * width of an image in css pixels
+     */
+    width: number;
+    /**
+     * height of an image in css pixels
+     */
+    height: number;
+    /**
+     * image aspect ratio
+     */
+    ratio: number;
+    /**
+     * pixel density of the source image
+     */
+    pixelRatio: number;
+  };
 };

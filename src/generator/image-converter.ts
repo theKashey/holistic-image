@@ -64,23 +64,37 @@ export const deriveHolisticImage = async (source: string, targets: string[], con
     const imageSource = imagePool().ingestImage(source);
     const imageInfo = await imageSource.decoded;
 
-    const metaFileIndex = missingTargets.findIndex((x) => x.includes('.meta.js'));
+    const metaJsFileIndex = missingTargets.findIndex((x) => x.includes('.meta.js'));
+    const metaSassFileIndex = missingTargets.findIndex((x) => x.includes('.meta.scss'));
     const metaResult: any = {};
     const imageIs2X = is2X(source);
+    const metaSizeFactor = imageIs2X ? 0.5 : 1;
+    const pixelRatio = imageIs2X ? 2 : 1;
 
-    if (metaFileIndex >= 0) {
-      const metaFile = missingTargets.splice(metaFileIndex, 1)[0];
+    if (metaJsFileIndex >= 0) {
+      const metaFile = missingTargets.splice(metaJsFileIndex, 1)[0];
 
-      const metaSizeFactor = imageIs2X ? 0.5 : 1;
-
-      metaResult[metaFile] = `
-/* AUTO GENERATED FILE! */
+      metaResult[metaFile] = `/* AUTO GENERATED FILE! */
 /* eslint-disable */
 export default { 
   width: ${imageInfo.bitmap.width * metaSizeFactor}, 
   height: ${imageInfo.bitmap.height * metaSizeFactor}, 
-  ratio: ${(imageInfo.bitmap.width / imageInfo.bitmap.height) * metaSizeFactor}, 
+  ratio: ${imageInfo.bitmap.width / imageInfo.bitmap.height},
+  pixelRatio: ${pixelRatio}
 }`;
+    }
+
+    if (metaSassFileIndex >= 0) {
+      const metaFile = missingTargets.splice(metaSassFileIndex, 1)[0];
+
+      const metaSizeFactor = imageIs2X ? 0.5 : 1;
+
+      metaResult[metaFile] = `/* AUTO GENERATED FILE! */
+$width: ${imageInfo.bitmap.width * metaSizeFactor};
+$height: ${imageInfo.bitmap.height * metaSizeFactor};
+$ratio: ${imageInfo.bitmap.width / imageInfo.bitmap.height};
+$reverseRatio: ${imageInfo.bitmap.height / imageInfo.bitmap.width};
+`;
     }
 
     if (imageIs2X) {
